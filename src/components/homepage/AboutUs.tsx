@@ -17,23 +17,23 @@ const ProductProcess = () => {
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % steps.length);
-    }, 2000); 
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
 
   return (
-    <div className="flex flex-col items-center py-16 text-white my-10 mx-4">
-      <h1 className="md:text-5xl text-3xl font-bold text-center md:mb-20 mb-8">How It Works</h1>
+    <div className="flex flex-col items-center py-8 sm:py-12 md:py-16 text-white my-6 sm:my-8 md:my-10 mx-4">
+      <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center mb-6 sm:mb-8 md:mb-12 lg:mb-20">How It Works</h1>
 
-      <div className="flex flex-wrap justify-center items-center w-full max-w-5xl space-y-20 md:space-y-0 md:space-x-10 space-x-10 mb-8 mr-8">
+      <div className="flex flex-col sm:flex-row flex-wrap justify-center items-center w-full max-w-5xl gap-6 sm:gap-8 md:gap-10 mb-8">
         {steps.map((step, index) => (
           <motion.div
             key={step.id}
             initial={{ scale: 1, opacity: 0.6 }}
             animate={
               activeStep === index
-                ? { scale: 1.2, opacity: 1, y: -10 }
+                ? { scale: 1.1, opacity: 1, y: -5 }
                 : { scale: 1, opacity: 0.6, y: 0 }
             }
             transition={{
@@ -41,18 +41,17 @@ const ProductProcess = () => {
               stiffness: 120,
               damping: 10,
             }}
-            className="flex flex-col items-center space-y-3 relative"
+            className="flex flex-col items-center space-y-2 sm:space-y-3 relative min-w-[120px] sm:min-w-[140px]"
           >
             <div
-              className={`w-16 h-16 flex items-center justify-center rounded-full text-3xl transition-all duration-300 ${
-                activeStep === index
+              className={`w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 flex items-center justify-center rounded-full text-xl sm:text-2xl md:text-3xl transition-all duration-300 ${activeStep === index
                   ? "bg-gradient-to-r from-purple-500 to-blue-500 shadow-xl"
                   : "bg-gray-700"
-              } text-white`}
+                } text-white`}
             >
               {step.icon}
             </div>
-            <p className="text-lg font-semibold">{step.title}</p>
+            <p className="text-sm sm:text-base md:text-lg font-semibold text-center">{step.title}</p>
           </motion.div>
         ))}
       </div>

@@ -155,21 +155,21 @@ export default function TransactionList() {
 
   if (error) {
     return (
-      <div className="w-full max-w-2xl mx-auto rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-6">
+      <div className="w-full max-w-2xl mx-auto rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-4 sm:p-6">
         <TransactionHeader
           showViewAll={
             isDashboard && allTransactions.length > MAX_DASHBOARD_TRANSACTIONS
           }
         />
-        <div className="text-center text-gray-400 py-8">
-          <p>{error}</p>
+        <div className="text-center text-gray-400 py-6 sm:py-8">
+          <p className="text-sm sm:text-base">{error}</p>
           <button
             onClick={() => {
               setLoading(true);
               setError(null);
               fetchTransactions();
             }}
-            className="mt-4 text-purple-500 hover:text-purple-400"
+            className="mt-3 sm:mt-4 text-sm sm:text-base text-purple-500 hover:text-purple-400"
           >
             Try again
           </button>
@@ -180,23 +180,23 @@ export default function TransactionList() {
 
   if (allTransactions.length === 0) {
     return (
-      <div className="w-full max-w-2xl mx-auto rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-6">
+      <div className="w-full max-w-2xl mx-auto rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-4 sm:p-6">
         <TransactionHeader showViewAll={false} />
-        <div className="text-center text-gray-400 py-8">
-          <p>No transactions found</p>
+        <div className="text-center text-gray-400 py-6 sm:py-8">
+          <p className="text-sm sm:text-base">No transactions found</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-2xl mx-auto rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-4 sm:p-6">
+    <div className="w-full max-w-2xl mx-auto rounded-2xl sm:rounded-3xl bg-gradient-to-b from-[#1C1C27] to-[#1C1C2700] p-4 sm:p-6">
       <TransactionHeader
         showViewAll={
           isDashboard && allTransactions.length > MAX_DASHBOARD_TRANSACTIONS
         }
       />
-      <div className="mt-4 sm:mt-6 space-y-4">
+      <div className="mt-4 sm:mt-6 space-y-2 sm:space-y-4">
         {displayedTransactions.map((transaction, index) => (
           <TransactionItem
             key={transaction.txHash || transaction.id}

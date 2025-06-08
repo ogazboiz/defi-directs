@@ -297,41 +297,41 @@ export function TransactionDetailsModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md border-none bg-[#12032D] p-0 text-white rounded-[40px]">
-        <div className="p-6 space-y-6">
-          <div className="flex flex-col items-center gap-4">
-            <div className={`${statusBgColors[status]} rounded-full p-4 shadow-lg`}>
+      <DialogContent className="max-w-md w-[95vw] sm:w-full border-none bg-[#12032D] p-0 text-white rounded-[20px] sm:rounded-[40px] max-h-[90vh] overflow-y-auto">
+        <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <div className="flex flex-col items-center gap-3 sm:gap-4">
+            <div className={`${statusBgColors[status]} rounded-full p-3 sm:p-4 shadow-lg`}>
               <Image
                 src={statusIcons[status] || "/successfulTx.png"}
                 alt="Transaction Status"
                 width={40}
                 height={40}
-                className="w-10 h-10"
+                className="w-8 h-8 sm:w-10 sm:h-10"
               />
             </div>
             <div className="text-center">
-              <p className={`text-sm ${statusColors[status]}`}>
+              <p className={`text-xs sm:text-sm ${statusColors[status]}`}>
                 Transaction {status.charAt(0).toUpperCase() + status.slice(1)}
               </p>
-              <h2 className="text-3xl font-bold">NGN {amount.toLocaleString()}</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold">NGN {amount.toLocaleString()}</h2>
             </div>
           </div>
 
-          <hr className="my-6 border-gray-700" />
+          <hr className="my-4 sm:my-6 border-gray-700" />
 
-          <div className="space-y-4">
-            <div className="flex justify-between">
-              <span className="text-white text-lg">Transfer type</span>
+          <div className="space-y-3 sm:space-y-4">
+            <div className="flex justify-between items-start">
+              <span className="text-white text-base sm:text-lg">Transfer type</span>
               <span className="text-sm text-gray-400">Bank Transfer</span>
             </div>
 
-            <div className="flex justify-between">
-              <span className="text-white text-lg">Recipient Details</span>
-              <span className="text-right text-gray-400">
-                {fullRecipient} <br />
-                <span className="text-xs">
+            <div className="flex justify-between items-start">
+              <span className="text-white text-base sm:text-lg">Recipient Details</span>
+              <span className="text-right text-gray-400 text-sm sm:text-base max-w-[60%]">
+                <div className="break-words">{fullRecipient}</div>
+                <div className="text-xs mt-1">
                   {txHash?.substring(0, 10)} | {bank}
-                </span>
+                </div>
               </span>
             </div>
 

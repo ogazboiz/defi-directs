@@ -76,9 +76,9 @@ export default function StableCoinList() {
   }, [usdcBalance, usdtBalance, usdcPrice, usdtPrice]); // Include all dependencies
 
   return (
-    <div className="w-full h-full rounded-3xl  p-6">
-      <h2 className="text-2xl font-semibold text-white">Your Stable coins</h2>
-      <div className="mt-6">
+    <div className="w-full h-full rounded-2xl sm:rounded-3xl p-4 sm:p-6">
+      <h2 className="text-lg sm:text-2xl font-semibold text-white">Your Stable coins</h2>
+      <div className="mt-4 sm:mt-6">
         {stableCoins.map((coin, index) => (
           <StableCoinItem
             key={coin.id}

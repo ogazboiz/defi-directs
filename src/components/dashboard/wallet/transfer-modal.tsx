@@ -596,85 +596,86 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
   if (showQuote) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md border border-[#7b40e3]/20 bg-gradient-to-b from-[#1A0E2C] to-[#160429] p-0 text-white">
-          <div className="space-y-6 p-6">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold text-[#7b40e3]">Quote</h2>
-              <div className="flex items-center gap-3 text-sm">
-                <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                <span className="text-gray-300 font-medium">Refreshing in</span>
-                <div className="bg-[#7b40e3] px-3 py-1 rounded-full">
-                  <span className="font-bold text-white">{quoteCountdown}s</span>
+        <DialogContent className="w-[95vw] sm:w-full max-w-md border border-[#7b40e3]/20 bg-gradient-to-b from-[#1A0E2C] to-[#160429] p-0 text-white rounded-[20px] sm:rounded-lg max-h-[90vh] overflow-y-auto">
+          <div className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+            <div className="flex items-center justify-between flex-wrap gap-2">
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#7b40e3]">Quote</h2>
+              <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm">
+                <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-green-500"></div>
+                <span className="text-gray-300 font-medium hidden sm:inline">Refreshing in</span>
+                <span className="text-gray-300 font-medium sm:hidden">Refresh:</span>
+                <div className="bg-[#7b40e3] px-2 sm:px-3 py-1 rounded-full">
+                  <span className="font-bold text-white text-xs sm:text-sm">{quoteCountdown}s</span>
                 </div>
               </div>
             </div>
 
             {quoteLoading ? (
-              <div className="flex items-center justify-center py-12">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-[#7b40e3]/20 border-t-[#7b40e3]"></div>
-                <div className="ml-4">
-                  <span className="text-lg font-medium text-white">Generating quote...</span>
-                  <div className="text-sm text-purple-400 mt-1">Fetching real-time rates</div>
+              <div className="flex items-center justify-center py-8 sm:py-12">
+                <div className="animate-spin rounded-full h-8 w-8 sm:h-12 sm:w-12 border-4 border-[#7b40e3]/20 border-t-[#7b40e3]"></div>
+                <div className="ml-3 sm:ml-4">
+                  <span className="text-base sm:text-lg font-medium text-white">Generating quote...</span>
+                  <div className="text-xs sm:text-sm text-purple-400 mt-1">Fetching real-time rates</div>
                 </div>
               </div>
             ) : quote ? (
-              <div className="space-y-6">
-                <div className="bg-[#14141B] p-6 border border-purple-500/20">
-                  <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
+                <div className="bg-[#14141B] p-4 sm:p-6 border border-purple-500/20 rounded-lg">
+                  <div className="space-y-4 sm:space-y-6">
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400 font-medium">You send</span>
+                      <span className="text-gray-400 font-medium text-sm sm:text-base">You send</span>
                       <div className="text-right">
-                        <div className="text-2xl font-bold text-white">₦{formData.amount}</div>
-                        <div className="text-sm text-gray-400">Nigerian Naira</div>
+                        <div className="text-xl sm:text-2xl font-bold text-white">₦{formData.amount}</div>
+                        <div className="text-xs sm:text-sm text-gray-400">Nigerian Naira</div>
                       </div>
                     </div>
 
                     <div className="flex justify-center">
-                      <div className="h-6 w-6 rounded-full bg-purple-600 flex items-center justify-center">
-                        <ChevronDown className="h-3 w-3 text-white" />
+                      <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-purple-600 flex items-center justify-center">
+                        <ChevronDown className="h-2 w-2 sm:h-3 sm:w-3 text-white" />
                       </div>
                     </div>
 
                     <div className="flex justify-between items-center">
-                      <span className="text-gray-400 font-medium">You receive</span>
+                      <span className="text-gray-400 font-medium text-sm sm:text-base">You receive</span>
                       <div className="text-right">
-                        <div className="text-2xl font-bold flex items-center gap-3 text-purple-400">
+                        <div className="text-lg sm:text-2xl font-bold flex items-center gap-2 sm:gap-3 text-purple-400">
                           <img
                             src={selectedToken.logo}
                             alt={selectedToken.name}
-                            width={28}
-                            height={28}
-                            className="rounded-full border-2 border-purple-500/30"
+                            width={24}
+                            height={24}
+                            className="sm:w-7 sm:h-7 rounded-full border-2 border-purple-500/30"
                           />
-                          {quote.tokenAmount.toFixed(6)} {selectedToken.name}
+                          <span className="truncate">{quote.tokenAmount.toFixed(6)} {selectedToken.name}</span>
                         </div>
-                        <div className="text-sm text-gray-400">≈ ₦{formData.amount}</div>
+                        <div className="text-xs sm:text-sm text-gray-400">≈ ₦{formData.amount}</div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-[#14141B] p-5 space-y-4 border border-purple-500/20">
-                  <div className="flex justify-between text-sm">
+                <div className="bg-[#14141B] p-4 sm:p-5 space-y-3 sm:space-y-4 border border-purple-500/20 rounded-lg">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-400">Exchange rate</span>
-                    <span className="font-medium text-purple-400">1 {selectedToken.name} = ₦{quote.rate.toFixed(2)}</span>
+                    <span className="font-medium text-purple-400 text-right">1 {selectedToken.name} = ₦{quote.rate.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-400">Quote generated</span>
                     <span className="text-purple-400 font-medium">{quote.timestamp}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-gray-400">Quote expires</span>
                     <span className="text-orange-400 font-medium">{quote.expiresAt}</span>
                   </div>
                 </div>
 
-                <div className="bg-[#14141B] p-5 border border-purple-500/20">
-                  <div className="text-sm text-purple-400 font-medium mb-3">Transfer Details</div>
-                  <div className="space-y-3 text-sm">
+                <div className="bg-[#14141B] p-4 sm:p-5 border border-purple-500/20 rounded-lg">
+                  <div className="text-xs sm:text-sm text-purple-400 font-medium mb-2 sm:mb-3">Transfer Details</div>
+                  <div className="space-y-2 sm:space-y-3 text-xs sm:text-sm">
                     <div className="flex justify-between">
                       <span className="text-gray-400">Bank</span>
-                      <span className="font-medium text-white">{banks.find(bank => bank.code === formData.bankCode)?.name}</span>
+                      <span className="font-medium text-white text-right max-w-[60%] truncate">{banks.find(bank => bank.code === formData.bankCode)?.name}</span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Account</span>
@@ -682,21 +683,21 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                     </div>
                     <div className="flex justify-between">
                       <span className="text-gray-400">Recipient</span>
-                      <span className="font-medium text-white">{formData.accountName}</span>
+                      <span className="font-medium text-white text-right max-w-[60%] truncate">{formData.accountName}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
                   <button
                     onClick={handleBackFromQuote}
-                    className="flex-1 bg-[#2F2F3A] py-4 text-white hover:bg-[#3B3B4F] border border-gray-600/20 font-medium"
+                    className="w-full sm:flex-1 bg-[#2F2F3A] py-3 sm:py-4 text-white hover:bg-[#3B3B4F] border border-gray-600/20 font-medium text-sm sm:text-base rounded-lg"
                   >
                     Back
                   </button>
                   <button
                     onClick={handleAcceptQuote}
-                    className="flex-1 bg-[#7b40e3] py-4 text-white font-semibold hover:bg-purple-700"
+                    className="w-full sm:flex-1 bg-[#7b40e3] py-3 sm:py-4 text-white font-semibold hover:bg-purple-700 text-sm sm:text-base rounded-lg"
                   >
                     Accept Quote
                   </button>
@@ -716,7 +717,7 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
   if (showSummary) {
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-xl border-none bg-transparent p-0">
+        <DialogContent className="w-[95vw] sm:w-full max-w-xl border-none bg-transparent p-0">
           <TransferSummary
             loading={loading}
             approving={approving}
@@ -740,15 +741,15 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
     <>
       <Toaster position="top-center" />
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-md border border-[#7b40e3]/20 bg-[#1C1C27] p-0 text-white">
-          <div className="space-y-6 bg-[#1C1C27] p-6">
+        <DialogContent className="max-w-md w-[95vw] sm:w-full border border-[#7b40e3]/20 bg-[#1C1C27] p-0 text-white rounded-[20px] sm:rounded-lg max-h-[90vh] overflow-y-auto">
+          <div className="space-y-4 sm:space-y-6 bg-[#1C1C27] p-4 sm:p-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-bold text-[#7b40e3]">Transfer</h2>
+              <h2 className="text-2xl sm:text-3xl font-bold text-[#7b40e3]">Transfer</h2>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setDropdownOpen(!dropdownOpen)}
-                  className="flex items-center gap-3 bg-[#2F2F3A] px-4 py-3 text-sm border border-[#7b40e3]/20 hover:border-[#7b40e3]/40"
+                  className="flex items-center gap-2 sm:gap-3 bg-[#2F2F3A] px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm border border-[#7b40e3]/20 hover:border-[#7b40e3]/40"
                 >
                   <img
                     src={selectedToken.logo}
@@ -770,9 +771,9 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                           setSelectedToken(token);
                           setDropdownOpen(false);
                         }}
-                        className="flex w-full items-center gap-3 px-4 py-3 text-sm hover:bg-[#7b40e3]/10"
+                        className="flex w-full items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm hover:bg-[#7b40e3]/10"
                       >
-                        <img src={token.logo} alt={token.name} width={20} height={20} className="rounded-full" />
+                        <img src={token.logo} alt={token.name} width={16} height={16} className="sm:w-5 sm:h-5 rounded-full flex-shrink-0" />
                         <span className="font-medium">{token.name}</span>
                       </button>
                     ))}
@@ -781,17 +782,17 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
               </div>
             </div>
 
-            <div className="bg-[#14141B] p-6 border border-[#7b40e3]/10">
+            <div className="bg-[#14141B] p-4 sm:p-6 border border-[#7b40e3]/10">
               <div className="relative">
-                <form className="space-y-6" onSubmit={handleSubmit}>
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-purple-400">Select Bank</label>
+                <form className="space-y-4 sm:space-y-6" onSubmit={handleSubmit}>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-xs sm:text-sm font-medium text-purple-400">Select Bank</label>
                     <div className="relative">
                       <select
                         name="bankCode"
                         value={formData.bankCode}
                         onChange={handleChange}
-                        className="w-full appearance-none bg-[#2F2F3A] px-6 py-4 text-white border border-purple-500/20 focus:outline-none focus:border-purple-500"
+                        className="w-full appearance-none bg-[#2F2F3A] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white border border-purple-500/20 focus:outline-none focus:border-purple-500"
                         required
                       >
                         <option value="" disabled className="bg-[#2F2F3A] text-gray-400">
@@ -803,12 +804,12 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                           </option>
                         ))}
                       </select>
-                      <ChevronDown className="absolute right-6 top-1/2 h-5 w-5 -translate-y-1/2 transform text-purple-400" />
+                      <ChevronDown className="absolute right-4 sm:right-6 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 transform text-purple-400" />
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-purple-400">Account Number</label>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-xs sm:text-sm font-medium text-purple-400">Account Number</label>
                     <div className="relative">
                       <input
                         type="text"
@@ -816,7 +817,7 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                         value={formData.accountNumber}
                         onChange={handleChange}
                         placeholder="Enter 10-digit account number"
-                        className="w-full bg-[#2F2F3A] px-6 py-4 text-white placeholder-gray-400 border border-purple-500/20 focus:outline-none focus:border-purple-500"
+                        className="w-full bg-[#2F2F3A] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white placeholder-gray-400 border border-purple-500/20 focus:outline-none focus:border-purple-500"
                         maxLength={10}
                         pattern="[0-9]{10}"
                         required
@@ -825,26 +826,26 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                   </div>
 
                   {verifying && (
-                    <div className="flex items-center gap-3 text-sm text-purple-400 bg-purple-500/10 px-4 py-3 border border-purple-500/20">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-400"></div>
+                    <div className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm text-purple-400 bg-purple-500/10 px-3 sm:px-4 py-2 sm:py-3 border border-purple-500/20">
+                      <div className="animate-spin rounded-full h-3 w-3 sm:h-4 sm:w-4 border-b-2 border-purple-400"></div>
                       <span>Verifying account details...</span>
                     </div>
                   )}
 
                   {formData.accountName && (
-                    <div className="bg-green-500/10 px-6 py-4 border border-green-500/20">
-                      <div className="flex items-center gap-3">
-                        <div className="h-3 w-3 rounded-full bg-green-500"></div>
-                        <div>
-                          <p className="text-sm text-green-400 font-medium">Account Verified</p>
-                          <p className="font-semibold text-white">{formData.accountName}</p>
+                    <div className="bg-green-500/10 px-4 sm:px-6 py-3 sm:py-4 border border-green-500/20">
+                      <div className="flex items-center gap-2 sm:gap-3">
+                        <div className="h-2 w-2 sm:h-3 sm:w-3 rounded-full bg-green-500 flex-shrink-0"></div>
+                        <div className="min-w-0">
+                          <p className="text-xs sm:text-sm text-green-400 font-medium">Account Verified</p>
+                          <p className="font-semibold text-white text-sm sm:text-base truncate">{formData.accountName}</p>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  <div className="space-y-3">
-                    <label className="text-sm font-medium text-purple-400">Transfer Amount</label>
+                  <div className="space-y-2 sm:space-y-3">
+                    <label className="text-xs sm:text-sm font-medium text-purple-400">Transfer Amount</label>
                     <div className="relative">
                       <input
                         type="number"
@@ -852,34 +853,34 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
                         value={formData.amount}
                         onChange={handleChange}
                         placeholder="Enter amount in NGN"
-                        className="w-full bg-[#2F2F3A] px-6 py-4 text-white placeholder-gray-400 border border-purple-500/20 focus:outline-none focus:border-purple-500 text-lg font-medium"
+                        className="w-full bg-[#2F2F3A] px-4 sm:px-6 py-3 sm:py-4 text-sm sm:text-base text-white placeholder-gray-400 border border-purple-500/20 focus:outline-none focus:border-purple-500 sm:text-lg font-medium"
                         min={100}
                         max={parseFloat(selectedTokenBalance.replace(/,/g, ''))}
                         required
                       />
                     </div>
-                    <div className="flex items-center justify-between text-sm">
+                    <div className="flex items-center justify-between text-xs sm:text-sm">
                       <span className="text-gray-400">Available balance:</span>
-                      <span className="font-medium text-purple-400">{selectedTokenBalance} {selectedToken.name}</span>
+                      <span className="font-medium text-purple-400 text-right">{selectedTokenBalance} {selectedToken.name}</span>
                     </div>
                   </div>
 
-                  <div className="pt-4">
+                  <div className="pt-3 sm:pt-4">
                     <button
                       type="submit"
                       disabled={loading}
-                      className="w-full bg-purple-600 px-6 py-4 font-semibold text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                      className="w-full bg-purple-600 px-4 sm:px-6 py-3 sm:py-4 font-semibold text-sm sm:text-base text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <div className="flex items-center justify-center gap-3">
+                      <div className="flex items-center justify-center gap-2 sm:gap-3">
                         {loading ? (
                           <>
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                            <span className="font-semibold text-white">Processing...</span>
+                            <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 border-b-2 border-white"></div>
+                            <span className="font-semibold text-white text-sm sm:text-base">Processing...</span>
                           </>
                         ) : (
                           <>
-                            <span className="font-semibold text-white text-lg">Get Quote</span>
-                            <ChevronDown className="h-4 w-4 text-white rotate-[-90deg]" />
+                            <span className="font-semibold text-white text-sm sm:text-lg">Get Quote</span>
+                            <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4 text-white rotate-[-90deg]" />
                           </>
                         )}
                       </div>

@@ -18,13 +18,13 @@ function HeroSection() {
   return (
     <AutoConnectWrapper>
       <div>
-        <div className='flex 2xl:justify-between lg:justify-between justify-between  w-full max-w-6xl mx-auto items-center'>
-          <div className='ml-6'> <Logo /></div>
-          <div className=" mr-6 z-10 flex items-center gap-3">
+        <div className='flex justify-between w-full max-w-6xl mx-auto items-center px-4 sm:px-6'>
+          <div> <Logo /></div>
+          <div className="z-10 flex items-center gap-2 sm:gap-3">
             {isAuthenticated ? (
               <>
                 <Link href="/dashboard">
-                  <button className='py-3 px-6 bg-[#7b40e3] rounded-lg font-bold text-sm hover:bg-purple-700 transition-colors h-[44px]'>
+                  <button className='py-2 sm:py-3 px-3 sm:px-6 bg-[#7b40e3] rounded-lg font-bold text-xs sm:text-sm hover:bg-purple-700 transition-colors h-[36px] sm:h-[44px]'>
                     Dashboard
                   </button>
                 </Link>
@@ -35,18 +35,18 @@ function HeroSection() {
             )}
           </div>
         </div>
-        <div className="mx-auto max-w-4xl">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6">
           <div className='flex flex-col items-center text-center'>
-            {/* Floating crypto icons */}
-            <div className="absolute inset-0 z-0">
+            {/* Floating crypto icons - hidden on mobile, shown on larger screens */}
+            <div className="absolute inset-0 z-0 hidden lg:block">
               <SlideIn direction="down" delay={0.2}>
-                <div className="absolute top-[107px] left-[210px] animate-pulse hidden md:flex ">
+                <div className="absolute top-[107px] left-[210px] animate-pulse">
                   <Image
                     src="/Bitcoin_3D.png"
                     alt="Bitcoin"
                     width={113}
                     height={114}
-                    className="hover:scale-150 transition-transform duration-300 w-20 h-20"
+                    className="hover:scale-150 transition-transform duration-300 w-12 h-12 lg:w-16 lg:h-16 xl:w-20 xl:h-20"
                   />
                 </div>
               </SlideIn>
@@ -58,8 +58,7 @@ function HeroSection() {
                     alt="usd"
                     width={80}
                     height={80}
-                    style={{ width: "auto", height: "auto" }}
-                    className="hover:scale-150 transition-transform duration-300"
+                    className="hover:scale-150 transition-transform duration-300 w-12 h-12 lg:w-16 lg:h-16 xl:w-20 xl:h-20"
                   />
                 </div>
               </SlideIn>
@@ -71,8 +70,7 @@ function HeroSection() {
                     alt="Shiba Inu"
                     width={130}
                     height={130}
-                    style={{ width: "auto", height: "auto" }}
-                    className="hover:scale-150 transition-transform duration-300"
+                    className="hover:scale-150 transition-transform duration-300 w-20 h-20 lg:w-24 lg:h-24 xl:w-32 xl:h-32"
                   />
                 </div>
               </SlideIn>
@@ -84,8 +82,7 @@ function HeroSection() {
                     alt="Polygon"
                     width={120}
                     height={120}
-                    style={{ width: "auto", height: "auto" }}
-                    className="hover:scale-150 transition-transform duration-300"
+                    className="hover:scale-150 transition-transform duration-300 w-16 h-16 lg:w-20 lg:h-20 xl:w-24 xl:h-24"
                   />
                 </div>
               </SlideIn>
@@ -97,8 +94,7 @@ function HeroSection() {
                     alt="Solana"
                     width={60}
                     height={60}
-                    style={{ width: "auto", height: "auto" }}
-                    className="hover:scale-150 transition-transform duration-300"
+                    className="hover:scale-150 transition-transform duration-300 w-12 h-12 lg:w-14 lg:h-14"
                   />
                 </div>
               </SlideIn>
@@ -110,27 +106,27 @@ function HeroSection() {
                     alt="Ethereum"
                     width={55}
                     height={55}
-                    className="hover:scale-150 transition-transform duration-300 w-16 h-16"
+                    className="hover:scale-150 transition-transform duration-300 w-12 h-12 lg:w-16 lg:h-16"
                   />
                 </div>
               </SlideIn>
             </div>
 
             <FadeIn delay={0.1}>
-              <h1 className="md:text-7xl text-3xl md:mt-20 mt-10 mb-4">
+              <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl font-bold mt-6 sm:mt-8 md:mt-12 lg:mt-16 xl:mt-20 mb-3 sm:mb-4 leading-tight px-2">
                 Take Control of Your Finances With Seamless Crypto Spending
               </h1>
             </FadeIn>
 
             <FadeIn delay={0.3}>
-              <p className="md:mt-8 md:text-2xl md:mx-44 mx-4 mt-2">
+              <p className="mt-3 sm:mt-4 md:mt-6 lg:mt-8 text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mx-2 sm:mx-4 md:mx-8 lg:mx-16 xl:mx-32 2xl:mx-44 text-gray-300 leading-relaxed">
                 Spend directly from your DeFi wallet anywhere, anytime, no intermediaries, no delays. Secure, fast, and built for the future.
               </p>
             </FadeIn>
 
             <FadeIn delay={0.5}>
               <Link href="#WaitList">
-                <button className='py-2 md:px-6 px-4 bg-[#7b40e3] rounded-lg mt-8 animate-bounce font-bold md:text-2xl text-md hover:bg-purple-700 transition-colors'>
+                <button className='py-3 sm:py-3 md:py-4 px-6 sm:px-6 md:px-8 bg-[#7b40e3] rounded-lg mt-6 sm:mt-8 animate-bounce font-bold text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl hover:bg-purple-700 transition-colors'>
                   Join Waitlist
                 </button>
               </Link>
