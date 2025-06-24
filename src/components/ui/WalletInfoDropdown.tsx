@@ -5,9 +5,9 @@ import { useAccount, useSwitchChain, useChainId } from 'wagmi';
 // import { useUser } from '@civic/auth-web3/react';
 import { ChevronDown, Copy, LogOut, Network, Check } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { mainnet, sepolia, polygon, baseSepolia, base } from 'wagmi/chains';
+import { mainnet, sepolia, polygon, baseSepolia, base, liskSepolia } from 'wagmi/chains';
 
-const supportedChains = [mainnet, sepolia, polygon, baseSepolia, base];
+const supportedChains = [liskSepolia, mainnet, sepolia, polygon, baseSepolia, base];
 
 // Chain icon mapping with placeholder images
 const chainIcons: Record<number, string> = {
@@ -16,6 +16,7 @@ const chainIcons: Record<number, string> = {
     [polygon.id]: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
     [base.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
     [baseSepolia.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
+    [liskSepolia.id]: 'https://cryptologos.cc/logos/lisk-lsk-logo.png',
 };
 
 export function WalletInfoDropdown() {
@@ -110,9 +111,9 @@ export function WalletInfoDropdown() {
                             >
                                 <div className="flex items-center gap-2">
                                     {chainIcons[chainId] && (
-                                        <img 
-                                            src={chainIcons[chainId]} 
-                                            alt={currentChain?.name || 'Chain'} 
+                                        <img
+                                            src={chainIcons[chainId]}
+                                            alt={currentChain?.name || 'Chain'}
                                             className="w-4 h-4 rounded-full"
                                             onError={(e) => {
                                                 e.currentTarget.style.display = 'none';
@@ -142,9 +143,9 @@ export function WalletInfoDropdown() {
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
                                                     {chainIcons[chain.id] && (
-                                                        <img 
-                                                            src={chainIcons[chain.id]} 
-                                                            alt={chain.name} 
+                                                        <img
+                                                            src={chainIcons[chain.id]}
+                                                            alt={chain.name}
                                                             className="w-4 h-4 rounded-full"
                                                             onError={(e) => {
                                                                 e.currentTarget.style.display = 'none';

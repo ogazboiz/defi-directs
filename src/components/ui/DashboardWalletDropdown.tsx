@@ -6,12 +6,12 @@ import { useAccount, useSwitchChain, useChainId } from 'wagmi';
 // import { userHasWallet } from '@civic/auth-web3';
 import { ChevronDown, Copy, LogOut, Network, Check, Settings, User } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { mainnet, sepolia, polygon, baseSepolia, base } from 'wagmi/chains';
+import { mainnet, sepolia, polygon, baseSepolia, base, liskSepolia } from 'wagmi/chains';
 import { useRouter } from 'next/navigation';
 import { Avatar } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
-const supportedChains = [mainnet, sepolia, polygon, baseSepolia, base];
+const supportedChains = [liskSepolia, mainnet, sepolia, polygon, baseSepolia, base];
 
 // Chain icon mapping with placeholder images
 const chainIcons: Record<number, string> = {
@@ -20,6 +20,7 @@ const chainIcons: Record<number, string> = {
     [polygon.id]: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
     [base.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
     [baseSepolia.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
+    [liskSepolia.id]: 'https://cryptologos.cc/logos/lisk-lsk-logo.png',
 };
 
 export function DashboardWalletDropdown(): JSX.Element | null {

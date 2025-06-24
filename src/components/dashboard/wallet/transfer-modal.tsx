@@ -499,6 +499,7 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
             body: JSON.stringify({
               transactionId: parsedReceipt.txId,
               amountSpent: parsedReceipt.amount.toString(), // Convert BigInt to string
+              chainId: chainId, // Add chainId for multi-chain support
             }),
           });
 
