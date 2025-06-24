@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, createContext, useContext, useCallback } from "react";
-import { useAccount } from "wagmi";
+import { useAccount, useDisconnect } from "wagmi";
 import { useUser } from "@civic/auth-web3/react";
 import { fetchTokenBalance } from "@/utils/fetchTokenBalance";
 import { fetchTokenPrice } from "@/utils/fetchTokenprice";
@@ -33,6 +33,7 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { address, isConnected, connector } = useAccount();
   const { signOut } = useUser();
+  const { disconnect } = useDisconnect();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [walletIcon, setWalletIcon] = useState<string | null>(null);
@@ -105,12 +106,17 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const disconnectWallet = useCallback(async () => {
     try {
-      // Then sign out from Civic Auth to ensure complete disconnection
-      await signOut();
+      // For Civic wallets, sign out from Civic Auth
+      if (connector?.id === 'civic') {
+        await signOut();
+      } else {
+        // For other wallets (MetaMask, WalletConnect, etc.), use wagmi disconnect
+        disconnect();
+      }
     } catch (error) {
       console.error("Error during wallet disconnection:", error);
     }
-  }, [ signOut]);
+  }, [connector, signOut, disconnect]);
 
   useEffect(() => {
     setIsAuthenticated(isConnected);

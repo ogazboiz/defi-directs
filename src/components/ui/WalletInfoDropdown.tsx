@@ -2,8 +2,7 @@
 
 import React, { useState } from 'react';
 import { useAccount, useSwitchChain, useChainId } from 'wagmi';
-import { useUser } from '@civic/auth-web3/react';
-import { userHasWallet } from '@civic/auth-web3';
+// import { useUser } from '@civic/auth-web3/react';
 import { ChevronDown, Copy, LogOut, Network, Check } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { mainnet, sepolia, polygon, baseSepolia, base } from 'wagmi/chains';
@@ -23,7 +22,6 @@ export function WalletInfoDropdown() {
     const { address } = useAccount();
     const { switchChain } = useSwitchChain();
     const chainId = useChainId();
-    const userContext = useUser();
     const { walletIcon, walletName, disconnectWallet } = useWallet();
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [chainDropdownOpen, setChainDropdownOpen] = useState(false);
@@ -45,7 +43,7 @@ export function WalletInfoDropdown() {
 
     const currentChain = supportedChains.find(chain => chain.id === chainId);
 
-    if (!userContext.user || !userHasWallet(userContext) || !address) {
+    if (!address) {
         return null;
     }
 

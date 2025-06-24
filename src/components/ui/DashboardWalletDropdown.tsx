@@ -2,8 +2,8 @@
 
 import React, { useState } from 'react';
 import { useAccount, useSwitchChain, useChainId } from 'wagmi';
-import { useUser } from '@civic/auth-web3/react';
-import { userHasWallet } from '@civic/auth-web3';
+// import { useUser } from '@civic/auth-web3/react';
+// import { userHasWallet } from '@civic/auth-web3';
 import { ChevronDown, Copy, LogOut, Network, Check, Settings, User } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
 import { mainnet, sepolia, polygon, baseSepolia, base } from 'wagmi/chains';
@@ -26,7 +26,7 @@ export function DashboardWalletDropdown(): JSX.Element | null {
     const { address } = useAccount();
     const { switchChain } = useSwitchChain();
     const chainId = useChainId();
-    const userContext = useUser();
+    // const userContext = useUser();
     const { walletIcon, disconnectWallet } = useWallet();
     const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -55,7 +55,8 @@ export function DashboardWalletDropdown(): JSX.Element | null {
 
     const currentChain = supportedChains.find(chain => chain.id === chainId);
 
-    if (!userContext.user || !userHasWallet(userContext) || !address) {
+    // Show dropdown for any connected wallet, not just Civic wallets
+    if (!address) {
         return null;
     }
 
