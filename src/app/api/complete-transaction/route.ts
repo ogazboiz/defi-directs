@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ethers } from "ethers";
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/paydirect";
+import { CONTRACT_ABI, getContractAddress } from "@/paydirect";
+import { baseSepolia, liskSepolia } from 'wagmi/chains';
+
+// Multi-chain RPC URLs configuration
+const RPC_URLS = {
+    [baseSepolia.id]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
+    [liskSepolia.id]: process.env.NEXT_PUBLIC_LISK_SEPOLIA_RPC_URL || "https://rpc.sepolia-api.lisk.com"
+};
 
 // This should be stored securely in environment variables
 const TRANSACTION_MANAGER_PRIVATE_KEY = process.env.TRANSACTION_MANAGER_PRIVATE_KEY;
-const RPC_URL = process.env.NEXT_PUBLIC_RPC_URL || "https://sepolia.base.org";
 
 if (!TRANSACTION_MANAGER_PRIVATE_KEY) {
     console.error("TRANSACTION_MANAGER_PRIVATE_KEY environment variable is not set");
@@ -13,12 +19,20 @@ if (!TRANSACTION_MANAGER_PRIVATE_KEY) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { transactionId, amountSpent } = body;
+        const { transactionId, amountSpent, chainId } = body;
 
         // Validate required fields
-        if (!transactionId || !amountSpent) {
+        if (!transactionId || !amountSpent || !chainId) {
             return NextResponse.json(
-                { success: false, message: 'Missing required fields: transactionId and amountSpent' },
+                { success: false, message: 'Missing required fields: transactionId, amountSpent, and chainId' },
+                { status: 400 }
+            );
+        }
+
+        // Validate chainId is supported
+        if (!RPC_URLS[chainId as keyof typeof RPC_URLS]) {
+            return NextResponse.json(
+                { success: false, message: `Unsupported chain ID: ${chainId}` },
                 { status: 400 }
             );
         }
@@ -34,14 +48,20 @@ export async function POST(request: NextRequest) {
             );
         }
 
+        // Get chain-specific configuration
+        const rpcUrl = RPC_URLS[chainId as keyof typeof RPC_URLS];
+        const contractAddress = getContractAddress(chainId);
+
         // Set up the provider and signer
-        const provider = new ethers.JsonRpcProvider(RPC_URL);
+        const provider = new ethers.JsonRpcProvider(rpcUrl);
         const signer = new ethers.Wallet(TRANSACTION_MANAGER_PRIVATE_KEY, provider);
 
         // Create contract instance
-        const contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+        const contract = new ethers.Contract(contractAddress, CONTRACT_ABI, signer);
 
         console.log("Completing transaction with transaction manager...");
+        console.log("Chain ID:", chainId);
+        console.log("Contract Address:", contractAddress);
         console.log("Transaction ID:", transactionId);
         console.log("Amount spent:", amountSpent);
         console.log("Signer address:", signer.address);
@@ -66,6 +86,7 @@ export async function POST(request: NextRequest) {
                 success: true,
                 txHash: tx.hash,
                 blockNumber: receipt.blockNumber,
+                chainId: chainId,
                 message: 'Transaction completed successfully'
             });
         } else {

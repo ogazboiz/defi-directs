@@ -77,7 +77,8 @@ import { retrieveTransactions } from "@/services/retrieveTransactions";
 import TransactionContentSkeleton from "./transaction-content-skeleton";
 import { Transaction } from "@/types/transaction";
 import { TransactionDetailsModal } from "../dashboard/transactions/transaction-details-modal";
-import { TOKEN_ADDRESSES } from "@/config";
+import { getTokenAddresses } from "@/config";
+import { useChainId } from "wagmi";
 
 type TransactionResult = {
   user: `0x${string}`;
@@ -96,7 +97,7 @@ type TransactionResult = {
 };
 
 // Define the valid token names
-type TokenName = keyof typeof TOKEN_ADDRESSES;
+type TokenName = "USDC" | "USDT";
 
 const formatTimestamp = (timestamp: bigint) => {
   const date = new Date(Number(timestamp) * 1000);
@@ -124,11 +125,16 @@ const getStatus = (
 
 const formatTransaction = (
   transaction: TransactionResult,
-  pendingTransactions: Transaction[]
+  pendingTransactions: Transaction[],
+  chainId: number
 ): Transaction => {
   const { formatted, raw } = formatTimestamp(transaction.transactionTimestamp);
+
+  // Get token addresses for current chain
+  const tokenAddresses = getTokenAddresses(chainId);
+
   // Map token address to token name
-  const tokenName = (Object.entries(TOKEN_ADDRESSES) as [TokenName, `0x${string}`][]).find(
+  const tokenName = (Object.entries(tokenAddresses) as [TokenName, `0x${string}`][]).find(
     ([, address]) => address === transaction.token
   )?.[0] || "Unknown";
 
@@ -174,6 +180,7 @@ const formatTransaction = (
 
 function TransactionContent() {
   const { connectedAddress, pendingTransactions, transactionTrigger } = useWallet();
+  const chainId = useChainId();
   const [selectedFilter, setSelectedFilter] = useState('All types');
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = useState(false);
   const [transactions, setTransactions] = useState<Transaction[]>([]);
@@ -193,7 +200,7 @@ function TransactionContent() {
         setLoading(true);
         const backendTransactions = await retrieveTransactions(connectedAddress as `0x${string}`);
         const formattedTransactions = backendTransactions.map((tx) =>
-          formatTransaction(tx, pendingTransactions)
+          formatTransaction(tx, pendingTransactions, chainId || 4202) // Pass chainId with default
         );
         setTransactions(formattedTransactions);
       } catch (error) {
@@ -205,7 +212,7 @@ function TransactionContent() {
     };
 
     fetchTransactions();
-  }, [connectedAddress, pendingTransactions, transactionTrigger]);
+  }, [connectedAddress, pendingTransactions, transactionTrigger, chainId]); // Add chainId to dependencies
 
   // Filter transactions based on selected filter
   const filteredTransactions = transactions.filter((transaction) => {

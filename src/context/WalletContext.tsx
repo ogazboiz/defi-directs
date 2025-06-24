@@ -7,6 +7,16 @@ import { fetchTokenBalance } from "@/utils/fetchTokenBalance";
 import { fetchTokenPrice } from "@/utils/fetchTokenprice";
 import { walletIcons } from "@/utils/walletIcons";
 import { Transaction } from "@/types/transaction";
+import { baseSepolia, liskSepolia, mainnet, sepolia, polygon, base } from 'wagmi/chains';
+
+// Define supported chain IDs to match fetchTokenBalance
+type SupportedChainId = typeof liskSepolia.id | typeof baseSepolia.id | typeof mainnet.id | typeof sepolia.id | typeof polygon.id | typeof base.id;
+
+// Type guard to check if a number is a supported chain ID
+function isSupportedChainId(chainId: number): chainId is SupportedChainId {
+  const supportedChains: number[] = [liskSepolia.id, baseSepolia.id, mainnet.id, sepolia.id, polygon.id, base.id];
+  return supportedChains.includes(chainId);
+}
 
 interface WalletContextType {
   connectedAddress: string | null;
@@ -31,7 +41,7 @@ interface WalletContextType {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { address, isConnected, connector } = useAccount();
+  const { address, isConnected, connector, chainId } = useAccount();
   const { signOut } = useUser();
   const { disconnect } = useDisconnect();
 
@@ -68,12 +78,15 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [lastPriceUpdate]);
 
   const fetchBalances = useCallback(async () => {
-    if (!address || !connector) return;
+    if (!address || !connector || !chainId) return;
 
     try {
+      // Use type guard to ensure chainId is supported, fallback to Lisk Sepolia
+      const validChainId = isSupportedChainId(chainId) ? chainId : liskSepolia.id;
+
       const [usdcBalance, usdtBalance] = await Promise.all([
-        fetchTokenBalance("USDC", address),
-        fetchTokenBalance("USDT", address),
+        fetchTokenBalance("USDC", address, validChainId),
+        fetchTokenBalance("USDT", address, validChainId),
       ]);
 
       const walletId = connector.id?.toLowerCase?.();
@@ -90,7 +103,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       console.error("Failed to fetch token balances:", error);
     }
-  }, [address, connector, usdcPrice, usdtPrice]);
+  }, [address, connector, chainId, usdcPrice, usdtPrice]);
 
   const refetchTransactions = useCallback(() => {
     setTransactionTrigger((prev) => prev + 1);

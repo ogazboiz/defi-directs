@@ -1,4 +1,4 @@
-import { CONTRACT_ABI, CONTRACT_ADDRESS } from "@/paydirect";
+import { CONTRACT_ABI, getContractAddress } from "@/paydirect";
 import { type WalletClient, type Client, type PublicClient } from "viem";
 import { ethers } from "ethers";
 
@@ -37,6 +37,12 @@ export const completeTransaction = async (
   }
 
   try {
+    // Get contract address for the current chain
+    if (!publicClient.chain) {
+      throw new Error("Chain information not available in public client");
+    }
+    const contractAddress = getContractAddress(publicClient.chain.id);
+
     // Ensure transactionId is properly formatted as bytes32
     const encodedTxId = ethers.AbiCoder.defaultAbiCoder().encode(
       ["bytes32"],
@@ -45,7 +51,7 @@ export const completeTransaction = async (
 
     // Use wagmi wallet client to write to the contract
     const txHash = await walletClient.writeContract({
-      address: CONTRACT_ADDRESS,
+      address: contractAddress,
       abi: CONTRACT_ABI,
       functionName: 'completeTransaction',
       args: [encodedTxId, BigInt(amountSpent)],

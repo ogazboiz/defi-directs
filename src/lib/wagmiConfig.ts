@@ -1,10 +1,10 @@
 import { http, createConfig } from 'wagmi'
-import { mainnet, sepolia, polygon, baseSepolia, base } from 'wagmi/chains'
+import { mainnet, sepolia, polygon, baseSepolia, base, liskSepolia } from 'wagmi/chains'
 import { embeddedWallet } from '@civic/auth-web3/wagmi'
 import { walletConnect, coinbaseWallet } from 'wagmi/connectors'
 
 export const config = createConfig({
-    chains: [mainnet, sepolia, polygon, baseSepolia, base],
+    chains: [liskSepolia, mainnet, sepolia, polygon, baseSepolia, base],
     connectors: [
         embeddedWallet(),
         walletConnect({
@@ -22,6 +22,7 @@ export const config = createConfig({
         }),
     ],
     transports: {
+        [liskSepolia.id]: http(),
         [mainnet.id]: http(),
         [sepolia.id]: http(),
         [polygon.id]: http(),

@@ -1,4 +1,4 @@
-import { CONTRACT_ADDRESS, CONTRACT_ABI } from '@/paydirect';
+import { CONTRACT_ABI, getContractAddress } from '@/paydirect';
 import { ethers } from 'ethers';
 import { TransactionReceipt as ViemTransactionReceipt } from 'viem';
 import { TransactionReceipt as EthersTransactionReceipt } from 'ethers';
@@ -59,12 +59,14 @@ export const approveTransaction = async (
 
   // approve the token
   try {
+    const contractAddress = getContractAddress(publicClient.chain.id);
+
     // Use walletClient to write to the contract
     const txHash = await walletClient.writeContract({
       address: tokenAddress as `0x${string}`,
       abi: TOKEN_CONTRACT_ABI,
       functionName: 'approve',
-      args: [CONTRACT_ADDRESS, BigInt(totalAmount)],
+      args: [contractAddress, BigInt(totalAmount)],
     });
 
     console.log("Transaction hash:", txHash);
@@ -106,9 +108,11 @@ export const initiateTransaction = async (
   }
 
   try {
+    const contractAddress = getContractAddress(publicClient.chain.id);
+
     // Use walletClient to write to the contract with all required arguments
     const txHash = await walletClient.writeContract({
-      address: CONTRACT_ADDRESS,
+      address: contractAddress,
       abi: CONTRACT_ABI,
       functionName: 'initiateFiatTransaction',
       args: [

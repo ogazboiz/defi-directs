@@ -8,16 +8,22 @@ import toast, { Toaster } from 'react-hot-toast'
 import { initiateTransaction, approveTransaction, parseTransactionReceipt } from "@/services/initiateTransaction"
 import { usePublicClient, useWalletClient } from "wagmi"
 import { convertFiatToToken } from "@/utils/convertFiatToToken"
-import { TOKEN_ADDRESSES } from "@/config"
+
+import { getTokenAddresses } from "@/config"
 import { useWallet } from "@/context/WalletContext"
 import { formatBalance } from "@/utils/formatBalance"
 import { fetchTokenPrice } from "@/utils/fetchTokenprice"
 import { TransferSummary } from "./transfer-summary"
+import { useChainId } from "wagmi"
 
-const tokens = [
-  { name: "USDC", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/usd-coin-usdc-logo-600x600.webp", address: TOKEN_ADDRESSES['USDC'] },
-  { name: "USDT", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/tether-logo-600x600.webp", address: TOKEN_ADDRESSES['USDT'] },
-];
+// Dynamic token configuration based on chain
+function getTokensForChain(chainId: number) {
+  const tokenAddresses = getTokenAddresses(chainId);
+  return [
+    { name: "USDC", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/usd-coin-usdc-logo-600x600.webp", address: tokenAddresses.USDC },
+    { name: "USDT", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/tether-logo-600x600.webp", address: tokenAddresses.USDT },
+  ];
+}
 
 interface Bank {
   id: number;
@@ -32,6 +38,9 @@ interface TransferModalProps {
 }
 
 export function TransferModal({ open, onOpenChange }: TransferModalProps) {
+  const chainId = useChainId();
+  const tokens = getTokensForChain(chainId || 4202); // Default to Lisk Sepolia
+
   const [banks, setBanks] = useState<Bank[]>([]);
   const [loading, setLoading] = useState(false);
   const [approving, setApproving] = useState(false);
@@ -181,6 +190,12 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
       resetForm();
     }
   }, [open]);
+
+  // Reset selected token when chain changes
+  useEffect(() => {
+    const newTokens = getTokensForChain(chainId || 4202);
+    setSelectedToken(newTokens[0]);
+  }, [chainId]);
 
   // Quote countdown and auto-refresh effect
   useEffect(() => {

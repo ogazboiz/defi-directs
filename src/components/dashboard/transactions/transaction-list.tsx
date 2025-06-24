@@ -9,11 +9,12 @@ import { TransactionItem } from "./transaction-item";
 import { TransactionDetailsModal } from "./transaction-details-modal";
 import TransactionListSkeleton from "./transaction-list-skeleton";
 import { usePathname } from "next/navigation";
-import { TOKEN_ADDRESSES } from "@/config";
+import { getTokenAddresses } from "@/config";
 import { TransactionResult } from "@/types/transaction";
+import { useChainId } from "wagmi";
 
-// Define the valid token names
-type TokenName = keyof typeof TOKEN_ADDRESSES;
+// Define the valid token names based on chain
+type TokenName = "USDC" | "USDT";
 
 const formatTimestamp = (timestamp: bigint) => {
   const date = new Date(Number(timestamp) * 1000);
@@ -42,11 +43,16 @@ const getStatus = (
 const formatTransaction = (
   transaction: TransactionResult,
   index: number,
-  pendingTransactions: Transaction[]
+  pendingTransactions: Transaction[],
+  chainId: number
 ): Transaction => {
   const { formatted, raw } = formatTimestamp(transaction.transactionTimestamp);
+
+  // Get token addresses for current chain
+  const tokenAddresses = getTokenAddresses(chainId);
+
   // Map token address to token name
-  const tokenName = (Object.entries(TOKEN_ADDRESSES) as [TokenName, `0x${string}`][]).find(
+  const tokenName = (Object.entries(tokenAddresses) as [TokenName, `0x${string}`][]).find(
     ([, address]) => address === transaction.token
   )?.[0] || "Unknown";
 
@@ -92,6 +98,7 @@ const formatTransaction = (
 
 export default function TransactionList() {
   const { connectedAddress, transactionTrigger } = useWallet();
+  const chainId = useChainId();
   const [confirmedTransactions, setConfirmedTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -117,7 +124,7 @@ export default function TransactionList() {
 
       if (Array.isArray(transactionResult) && transactionResult.length > 0) {
         const formattedTransactions = transactionResult.map((tx, index) =>
-          formatTransaction(tx, index, []) // Pass empty array for pending transactions
+          formatTransaction(tx, index, [], chainId || 4202) // Pass chainId with default to Lisk Sepolia
         );
         setConfirmedTransactions(formattedTransactions);
         setError(null);
@@ -132,7 +139,7 @@ export default function TransactionList() {
     } finally {
       setLoading(false);
     }
-  }, [connectedAddress]); // Remove pendingTransactions from dependencies
+  }, [connectedAddress, chainId]); // Add chainId to dependencies
 
   useEffect(() => {
     // Fetch transactions immediately when transactionTrigger changes
