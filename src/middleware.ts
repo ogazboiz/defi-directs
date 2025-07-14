@@ -6,16 +6,16 @@ import { authMiddleware } from "@civic/auth-web3/nextjs/middleware";
 export default function middleware(request: NextRequest) {
   // Only protect dashboard routes - let everything else through
   const { pathname } = request.nextUrl;
-  
+
   // Define protected routes that need wallet connection
-  const protectedRoutes = ['/dashboard', '/settings', '/transaction'];
+  const protectedRoutes = ['/dashboard', '/settings', '/transaction', '/bills'];
   const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
-  
+
   if (!isProtectedRoute) {
     // For non-protected routes, use default Civic middleware for auth handling
     return authMiddleware()(request);
   }
-  
+
   // For protected routes, we'll handle authorization client-side
   // The UI components will check for wallet connection and redirect if needed
   return NextResponse.next();

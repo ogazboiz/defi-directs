@@ -9,23 +9,29 @@ interface WalletProtectedRouteProps {
 }
 
 export function WalletProtectedRoute({ children }: WalletProtectedRouteProps) {
-    const { isConnected } = useAccount();
+    const { isConnected, isConnecting } = useAccount();
     const router = useRouter();
 
     useEffect(() => {
-        // If no wallet is connected, redirect to home page
-        if (!isConnected) {
-            router.push('/');
-        }
-    }, [isConnected, router]);
+        // Only redirect if we're sure the wallet is not connected and not in connecting state
+        if (!isConnected && !isConnecting) {
+            const timer = setTimeout(() => {
+                router.push('/');
+            }, 1000); // Add a small delay to allow for connection detection
 
-    // If not connected, don't render the protected content
-    if (!isConnected) {
+            return () => clearTimeout(timer);
+        }
+    }, [isConnected, isConnecting, router]);
+
+    // Show loading while connecting or if connection state is uncertain
+    if (isConnecting || (!isConnected && !isConnecting)) {
         return (
             <div className="min-h-screen bg-[#0F0F14] flex items-center justify-center">
                 <div className="text-center">
                     <div className="h-8 w-8 border-3 border-[#7b40e3] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                    <p className="text-gray-400">Checking wallet connection...</p>
+                    <p className="text-gray-400">
+                        {isConnecting ? 'Connecting wallet...' : 'Checking wallet connection...'}
+                    </p>
                 </div>
             </div>
         );

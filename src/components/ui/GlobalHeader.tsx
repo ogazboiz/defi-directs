@@ -12,7 +12,7 @@ export function GlobalHeader() {
     const pathname = usePathname();
 
     // Don't show header on the home page or dashboard routes since they have their own headers
-    if (pathname === '/' || pathname.startsWith('/dashboard') || pathname.startsWith('/transaction') || pathname.startsWith('/settings')) {
+    if (pathname === '/' || pathname.startsWith('/dashboard') || pathname.startsWith('/transaction') || pathname.startsWith('/settings') || pathname.startsWith('/bills') || pathname.startsWith('/batch-transfer')) {
         return null;
     }
 

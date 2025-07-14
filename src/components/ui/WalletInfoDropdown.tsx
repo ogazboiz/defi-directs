@@ -1,5 +1,7 @@
 "use client";
 
+"use client";
+
 import React, { useState } from 'react';
 import { useAccount, useSwitchChain, useChainId } from 'wagmi';
 // import { useUser } from '@civic/auth-web3/react';

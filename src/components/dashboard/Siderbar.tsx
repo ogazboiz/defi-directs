@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { cn } from '@/lib/utils';
-import { FaCog, FaExchangeAlt, FaThLarge, FaBars, FaTimes, FaHome } from 'react-icons/fa';
+import { FaCog, FaExchangeAlt, FaThLarge, FaBars, FaTimes, FaHome, FaReceipt } from 'react-icons/fa';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Dispatch, SetStateAction } from 'react';
@@ -23,6 +23,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }: { isMobileMenuOpen: 
   const menuItems = [
     { name: 'Home', icon: <FaHome />, link: '/' },
     { name: 'Dashboard', icon: <FaThLarge />, link: '/dashboard' },
+    { name: 'Bills', icon: <FaReceipt />, link: '/bills' },
     { name: 'Transactions', icon: <FaExchangeAlt />, link: '/transaction' },
     { name: 'Settings', icon: <FaCog />, link: '/settings' },
   ];

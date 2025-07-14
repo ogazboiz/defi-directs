@@ -20,6 +20,7 @@ const Header: React.FC<{
   const getPageTitle = () => {
     if (pathname?.includes('transaction')) return 'Transactions';
     if (pathname?.includes('settings')) return 'Settings';
+    if (pathname?.includes('bills')) return 'Bill Payments';
     return 'Welcome 👋';
   };
 
