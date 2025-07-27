@@ -132,7 +132,7 @@ export const initiateTransaction = async (
     const receipt = await publicClient?.waitForTransactionReceipt({ hash: txHash });
     console.log("Transaction mined:", receipt);
 
-    return receipt;
+    return txHash;
   } catch (error) {
     console.error("Transaction failed:", error);
 

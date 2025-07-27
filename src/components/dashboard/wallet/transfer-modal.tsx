@@ -9,21 +9,12 @@ import { initiateTransaction, approveTransaction, parseTransactionReceipt } from
 import { usePublicClient, useWalletClient } from "wagmi"
 import { convertFiatToToken } from "@/utils/convertFiatToToken"
 
-import { getTokenAddresses } from "@/config"
 import { useWallet } from "@/context/WalletContext"
 import { formatBalance } from "@/utils/formatBalance"
 import { fetchTokenPrice } from "@/utils/fetchTokenprice"
+import { getTokensForChain } from "@/utils/tokens"
 import { TransferSummary } from "./transfer-summary"
 import { useChainId } from "wagmi"
-
-// Dynamic token configuration based on chain
-function getTokensForChain(chainId: number) {
-  const tokenAddresses = getTokenAddresses(chainId);
-  return [
-    { name: "USDC", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/usd-coin-usdc-logo-600x600.webp", address: tokenAddresses.USDC },
-    { name: "USDT", logo: "https://altcoinsbox.com/wp-content/uploads/2023/01/tether-logo-600x600.webp", address: tokenAddresses.USDT },
-  ];
-}
 
 interface Bank {
   id: number;
@@ -408,7 +399,7 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
       }
 
       // Step 1: First initiate the blockchain transaction to get txHash
-      const receipt = await initiateTransaction(
+      const txHash = await initiateTransaction(
         tokenAmount,
         selectedToken.address,
         formData.accountNumber,
@@ -419,11 +410,12 @@ export function TransferModal({ open, onOpenChange }: TransferModalProps) {
         walletClient
       );
 
-      if (!receipt) {
-        throw new Error("No transaction receipt returned");
+      if (!txHash) {
+        throw new Error("No transaction hash returned");
       }
 
-      const txHash = receipt.transactionHash as `0x${string}`;
+      // Wait for the transaction receipt
+      const receipt = await publicClient.waitForTransactionReceipt({ hash: txHash });
 
       // Parse the transaction receipt to get event data
       const parsedReceipt = await parseTransactionReceipt(receipt);

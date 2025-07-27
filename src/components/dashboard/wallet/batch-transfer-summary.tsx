@@ -8,6 +8,7 @@ import { usePublicClient, useWalletClient } from "wagmi"
 import { fetchTokenPrice } from "@/utils/fetchTokenprice"
 import BatchTransferService from "@/services/batchTransferService"
 import toast, { Toaster } from 'react-hot-toast'
+import Image from 'next/image'
 
 interface Recipient {
     id: string
@@ -42,15 +43,13 @@ export function BatchTransferSummary({
     const [approved, setApproved] = useState(false)
     const [processedTransfers, setProcessedTransfers] = useState<{ [key: string]: 'pending' | 'success' | 'failed' }>({})
 
-    const { usdcBalance, usdtBalance, refetchTransactions } = useWallet()
+    const { refetchTransactions } = useWallet()
     const publicClient = usePublicClient()
     const { data: walletClient } = useWalletClient()
 
     const totalAmount = recipients.reduce((sum, r) => sum + parseFloat(r.amount), 0)
     const platformFee = totalAmount * 0.01 // 1% fee
     const totalWithFee = totalAmount + platformFee
-
-    const selectedTokenBalance = selectedToken.name === "USDC" ? usdcBalance : usdtBalance
 
     const handleApproveTokens = async () => {
         if (!publicClient || !walletClient) {
@@ -214,7 +213,7 @@ export function BatchTransferSummary({
                                 <div className="flex justify-between">
                                     <span className="text-gray-400">Token</span>
                                     <div className="flex items-center gap-2">
-                                        <img src={selectedToken.logo} alt={selectedToken.name} className="w-5 h-5 rounded-full" />
+                                        <Image src={selectedToken.logo} alt={selectedToken.name} width={20} height={20} className="rounded-full" />
                                         <span className="text-white">{selectedToken.name}</span>
                                     </div>
                                 </div>
@@ -255,7 +254,7 @@ export function BatchTransferSummary({
                             <h3 className="text-lg font-medium text-white mb-4">Recipients</h3>
 
                             <div className="max-h-60 overflow-y-auto space-y-3">
-                                {recipients.map((recipient, index) => (
+                                {recipients.map((recipient) => (
                                     <div key={recipient.id} className="flex items-center justify-between p-3 bg-[#14141B] rounded-lg">
                                         <div className="flex items-center gap-3">
                                             {getTransferStatusIcon(processedTransfers[recipient.id])}
@@ -297,8 +296,8 @@ export function BatchTransferSummary({
                                     onClick={handleApproveTokens}
                                     disabled={approving || processing}
                                     className={`w-full rounded-lg py-4 text-lg font-medium transition-all duration-200 ${approving || processing
-                                            ? "bg-gray-600 cursor-not-allowed text-gray-400"
-                                            : "bg-[#7b40e3] hover:bg-purple-700 text-white"
+                                        ? "bg-gray-600 cursor-not-allowed text-gray-400"
+                                        : "bg-[#7b40e3] hover:bg-purple-700 text-white"
                                         }`}
                                 >
                                     {approving ? (
@@ -318,8 +317,8 @@ export function BatchTransferSummary({
                                     onClick={handleProcessBatchTransfer}
                                     disabled={processing}
                                     className={`w-full rounded-lg py-4 text-lg font-medium transition-all duration-200 ${processing
-                                            ? "bg-gray-600 cursor-not-allowed text-gray-400"
-                                            : "bg-[#7b40e3] hover:bg-purple-700 text-white"
+                                        ? "bg-gray-600 cursor-not-allowed text-gray-400"
+                                        : "bg-[#7b40e3] hover:bg-purple-700 text-white"
                                         }`}
                                 >
                                     {processing ? (

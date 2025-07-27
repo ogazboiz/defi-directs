@@ -2,6 +2,11 @@ import { convertFiatToToken } from "@/utils/convertFiatToToken"
 import { initiateTransaction, approveTransaction, parseTransactionReceipt } from "@/services/initiateTransaction"
 import { completeTransaction } from "@/services/completeTransaction"
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type PublicClientType = any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type WalletClientType = any
+
 export interface BatchRecipient {
     id: string
     accountName: string
@@ -19,12 +24,12 @@ export interface BatchTransferResult {
 }
 
 export class BatchTransferService {
-    private publicClient: any
-    private walletClient: any
-    private selectedToken: any
+    private publicClient: PublicClientType
+    private walletClient: WalletClientType
+    private selectedToken: { name: string; address: string; logo?: string }
     private tokenPrice: number
 
-    constructor(publicClient: any, walletClient: any, selectedToken: any, tokenPrice: number) {
+    constructor(publicClient: PublicClientType, walletClient: WalletClientType, selectedToken: { name: string; address: string; logo?: string }, tokenPrice: number) {
         this.publicClient = publicClient
         this.walletClient = walletClient
         this.selectedToken = selectedToken
@@ -40,7 +45,7 @@ export class BatchTransferService {
                 this.walletClient
             )
 
-            return approvalResult && approvalResult.receipt && approvalResult.receipt.status === 'success'
+            return Boolean(approvalResult?.receipt?.status === 'success')
         } catch (error) {
             console.error('Batch approval error:', error)
             return false
@@ -67,7 +72,7 @@ export class BatchTransferService {
             // Step 2: Store initial transaction in backend
             const transactionData = {
                 txId: txHash,
-                userAddress: this.walletClient.account.address,
+                userAddress: this.walletClient.account?.address || '',
                 token: this.selectedToken.address,
                 amountSpent: "0.00",
                 transactionFee: "0.001", // Default fee
@@ -100,7 +105,7 @@ export class BatchTransferService {
             const backendId = initialResponseData.id
 
             // Step 3: Wait for transaction confirmation
-            const receipt = await this.publicClient.waitForTransactionReceipt({ hash: txHash })
+            const receipt = await this.publicClient.waitForTransactionReceipt({ hash: txHash! })
 
             if (receipt.status === "success") {
                 const parsedReceipt = await parseTransactionReceipt(receipt)
@@ -124,12 +129,17 @@ export class BatchTransferService {
 
                     if (transferResult.success) {
                         // Step 5: Complete the transaction
-                        await completeTransaction(parsedReceipt.txId, parsedReceipt.amount)
+                        await completeTransaction(
+                            parsedReceipt.txId,
+                            Number(parsedReceipt.amount),
+                            this.publicClient,
+                            this.walletClient
+                        )
 
                         // Step 6: Update backend with completion
                         const updateData = {
                             txId: txHash,
-                            userAddress: this.walletClient.account.address,
+                            userAddress: this.walletClient.account?.address || '',
                             token: this.selectedToken.address,
                             amountSpent: parsedReceipt.amount.toString(),
                             transactionFee: "0.001",
@@ -156,8 +166,8 @@ export class BatchTransferService {
 
                         return {
                             id: recipient.id,
-                            status: 'success',
-                            txHash
+                            status: 'success' as const,
+                            txHash: txHash
                         }
                     } else {
                         throw new Error(transferResult.message || "Transfer failed")
@@ -172,7 +182,7 @@ export class BatchTransferService {
             console.error(`Transfer failed for recipient ${recipient.id}:`, error)
             return {
                 id: recipient.id,
-                status: 'failed',
+                status: 'failed' as const,
                 error: error instanceof Error ? error.message : 'Unknown error'
             }
         }
