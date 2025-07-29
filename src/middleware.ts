@@ -1,23 +1,14 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { authMiddleware } from "@civic/auth-web3/nextjs/middleware";
 
-// Custom middleware that allows access for any wallet connection
-export default function middleware(request: NextRequest) {
-  // Only protect dashboard routes - let everything else through
-  const { pathname } = request.nextUrl;
+// Simplified middleware for AppKit - no server-side auth needed
+// AppKit handles all authentication client-side
+export default function middleware() {
+  // With AppKit, we handle wallet connection entirely client-side
+  // No need for server-side authentication middleware
 
-  // Define protected routes that need wallet connection
-  const protectedRoutes = ['/dashboard', '/settings', '/transaction', '/bills'];
-  const isProtectedRoute = protectedRoutes.some(route => pathname.startsWith(route));
+  // You can add any custom logic here if needed
+  // For example, redirecting old routes, etc.
 
-  if (!isProtectedRoute) {
-    // For non-protected routes, use default Civic middleware for auth handling
-    return authMiddleware()(request);
-  }
-
-  // For protected routes, we'll handle authorization client-side
-  // The UI components will check for wallet connection and redirect if needed
   return NextResponse.next();
 }
 
@@ -29,7 +20,7 @@ export const config = {
      * - _next directory (Next.js static files)
      * - favicon.ico, sitemap.xml, robots.txt
      * - image files
-     * - api routes (api routes still need Civic auth for wallet creation)
+     * - api routes (api routes are protected by default)
      */
     '/((?!_next|favicon.ico|sitemap.xml|robots.txt|.*\\.jpg|.*\\.png|.*\\.svg|.*\\.gif|api).*)',
   ],

@@ -2,10 +2,10 @@
 import { readContract } from "@wagmi/core";
 import { getTokenAddresses } from "@/config";
 import { config } from "@/lib/wagmiConfig";
-import { baseSepolia, liskSepolia, mainnet, sepolia, polygon, base } from 'wagmi/chains';
+import { supportedChainIds } from '@/config/networks';
 
-// Define supported chain IDs from wagmi config
-type SupportedChainId = typeof liskSepolia.id | typeof baseSepolia.id | typeof mainnet.id | typeof sepolia.id | typeof polygon.id | typeof base.id;
+// Define supported chain IDs from centralized config
+type SupportedChainId = typeof supportedChainIds[number];
 
 const ERC20_ABI = [
   {
@@ -24,7 +24,7 @@ export const fetchTokenBalance = async (
 ) => {
   try {
     // Get token addresses for the specified chain or current chain
-    const tokenAddresses = getTokenAddresses(chainId || liskSepolia.id); // Default to Lisk Sepolia
+    const tokenAddresses = getTokenAddresses(chainId || supportedChainIds[0]); // Default to first supported chain
 
     const readContractParams = {
       address: tokenAddresses[token],

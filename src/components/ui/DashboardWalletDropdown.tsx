@@ -2,32 +2,17 @@
 
 import React, { useState } from 'react';
 import { useAccount, useSwitchChain, useChainId } from 'wagmi';
-// import { useUser } from '@civic/auth-web3/react';
-// import { userHasWallet } from '@civic/auth-web3';
 import { ChevronDown, Copy, LogOut, Network, Check, Settings, User } from 'lucide-react';
 import { useWallet } from '@/context/WalletContext';
-import { mainnet, sepolia, polygon, baseSepolia, base, liskSepolia } from 'wagmi/chains';
+import { supportedChains, chainIcons } from '@/config/networks';
 import { useRouter } from 'next/navigation';
 import { Avatar } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
-
-const supportedChains = [liskSepolia, mainnet, sepolia, polygon, baseSepolia, base];
-
-// Chain icon mapping with placeholder images
-const chainIcons: Record<number, string> = {
-    [mainnet.id]: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-    [sepolia.id]: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-    [polygon.id]: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
-    [base.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
-    [baseSepolia.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
-    [liskSepolia.id]: 'https://cryptologos.cc/logos/lisk-lsk-logo.png',
-};
 
 export function DashboardWalletDropdown(): JSX.Element | null {
     const { address } = useAccount();
     const { switchChain } = useSwitchChain();
     const chainId = useChainId();
-    // const userContext = useUser();
     const { walletIcon, disconnectWallet } = useWallet();
     const router = useRouter();
     const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -56,7 +41,7 @@ export function DashboardWalletDropdown(): JSX.Element | null {
 
     const currentChain = supportedChains.find(chain => chain.id === chainId);
 
-    // Show dropdown for any connected wallet, not just Civic wallets
+    // Show dropdown for any connected wallet
     if (!address) {
         return null;
     }

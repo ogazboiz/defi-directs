@@ -1,12 +1,12 @@
 // app/layout.tsx
 import './globals.css';
-import '../styles/civic-auth.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { headers } from 'next/headers';
 import StyledComponentsRegistry from '@/lib/AntdRegistry';
 import { Providers } from '@/components/Providers';
+import AppKitProvider from '@/context/AppKitProvider';
 import { WalletProvider } from '@/context/WalletContext';
-import { Web3AutoConnect } from '@/components/ui/Web3AutoConnect';
 import { GlobalHeader } from '@/components/ui/GlobalHeader';
 
 const roboto = Inter({
@@ -21,22 +21,25 @@ export const metadata: Metadata = {
   description: '',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const headersObj = await headers();
+  const cookies = headersObj.get('cookie');
+
   return (
     <html lang="en">
       <body className={roboto.className}>
         <StyledComponentsRegistry>
           <Providers>
-            <WalletProvider>
-              <Web3AutoConnect>
+            <AppKitProvider cookies={cookies}>
+              <WalletProvider>
                 <GlobalHeader />
                 {children}
-              </Web3AutoConnect>
-            </WalletProvider>
+              </WalletProvider>
+            </AppKitProvider>
           </Providers>
         </StyledComponentsRegistry>
       </body>

@@ -2,26 +2,26 @@
 import Image from 'next/image';
 import React from 'react';
 import Logo from '../Logo';
-import { useWallet } from '@/context/WalletContext'; // Use isAuthenticated from useWallet
+import { useAppKitAccount } from '@reown/appkit/react';
 import { ConnectButton } from '@/components/ui/ConnectButton';
 import { WalletInfoDropdown } from '@/components/ui/WalletInfoDropdown';
-import { AutoConnectWrapper } from '@/components/ui/AutoConnect';
+import { AutoConnect } from '@/components/ui/AutoConnect';
 import { FadeIn, SlideIn } from '@/components/ui/Transitions';
 import Link from 'next/link';
 
 function HeroSection() {
-  const { isAuthenticated } = useWallet(); // Use isAuthenticated from useWallet
+  const { isConnected } = useAppKitAccount();
   console.log(process.env.NEXT_PUBLIC_JSON_RPC_SERVER_URL)
 
   // Remove automatic redirect - let users manually navigate
 
   return (
-    <AutoConnectWrapper>
+    <AutoConnect>
       <div>
         <div className='flex justify-between w-full max-w-6xl mx-auto items-center px-4 sm:px-6'>
           <div> <Logo /></div>
           <div className="z-10 flex items-center gap-2 sm:gap-3">
-            {isAuthenticated ? (
+            {isConnected ? (
               <>
                 <Link href="/dashboard">
                   <button className='py-2 sm:py-3 px-3 sm:px-6 bg-[#7b40e3] rounded-lg font-bold text-xs sm:text-sm hover:bg-purple-700 transition-colors h-[36px] sm:h-[44px]'>
@@ -134,7 +134,7 @@ function HeroSection() {
           </div>
         </div>
       </div>
-    </AutoConnectWrapper>
+    </AutoConnect>
   );
 }
 

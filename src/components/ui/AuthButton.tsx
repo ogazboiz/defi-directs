@@ -1,7 +1,7 @@
 "use client";
 
 import React from 'react';
-import { UserButton } from '@civic/auth-web3/react';
+import { useAppKit, useAppKitAccount } from '@reown/appkit/react';
 
 interface AuthButtonProps {
     className?: string;
@@ -9,8 +9,12 @@ interface AuthButtonProps {
 }
 
 export function AuthButton({ className, style }: AuthButtonProps) {
+    const { open } = useAppKit();
+    const { isConnected, address } = useAppKitAccount();
+
     return (
-        <UserButton
+        <button
+            onClick={() => open()}
             className={className}
             style={{
                 borderRadius: "12px",
@@ -22,16 +26,14 @@ export function AuthButton({ className, style }: AuthButtonProps) {
                 transition: "all 0.3s ease",
                 fontWeight: "500",
                 color: "#ffffff",
+                cursor: "pointer",
                 ...style
             }}
-            dropdownButtonStyle={{
-                padding: "10px 16px",
-                fontSize: "14px",
-                backgroundColor: "#1a1a1a",
-                borderRadius: "8px",
-                border: "1px solid #374151",
-                boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1)"
-            }}
-        />
+        >
+            {isConnected
+                ? `${address?.slice(0, 6)}...${address?.slice(-4)}`
+                : 'Connect Wallet'
+            }
+        </button>
     );
 }

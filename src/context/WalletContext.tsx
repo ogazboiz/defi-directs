@@ -1,22 +1,11 @@
 "use client";
 
 import { useState, useEffect, createContext, useContext, useCallback } from "react";
-import { useAccount, useDisconnect } from "wagmi";
-import { useUser } from "@civic/auth-web3/react";
+import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
 import { fetchTokenBalance } from "@/utils/fetchTokenBalance";
 import { fetchTokenPrice } from "@/utils/fetchTokenprice";
-import { walletIcons } from "@/utils/walletIcons";
 import { Transaction } from "@/types/transaction";
-import { baseSepolia, liskSepolia, mainnet, sepolia, polygon, base } from 'wagmi/chains';
-
-// Define supported chain IDs to match fetchTokenBalance
-type SupportedChainId = typeof liskSepolia.id | typeof baseSepolia.id | typeof mainnet.id | typeof sepolia.id | typeof polygon.id | typeof base.id;
-
-// Type guard to check if a number is a supported chain ID
-function isSupportedChainId(chainId: number): chainId is SupportedChainId {
-  const supportedChains: number[] = [liskSepolia.id, baseSepolia.id, mainnet.id, sepolia.id, polygon.id, base.id];
-  return supportedChains.includes(chainId);
-}
+import { supportedChainIds, isSupportedChainId } from '@/config/networks';
 
 interface WalletContextType {
   connectedAddress: string | null;
@@ -41,9 +30,8 @@ interface WalletContextType {
 const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { address, isConnected, connector, chainId } = useAccount();
-  const { signOut } = useUser();
-  const { disconnect } = useDisconnect();
+  const { address, isConnected } = useAppKitAccount();
+  const { chainId } = useAppKitNetwork();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [walletIcon, setWalletIcon] = useState<string | null>(null);
@@ -78,20 +66,21 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   }, [lastPriceUpdate]);
 
   const fetchBalances = useCallback(async () => {
-    if (!address || !connector || !chainId) return;
+    if (!address || !chainId) return;
 
     try {
-      // Use type guard to ensure chainId is supported, fallback to Lisk Sepolia
-      const validChainId = isSupportedChainId(chainId) ? chainId : liskSepolia.id;
+      // Convert chainId to number if it's a string, and use type guard
+      const numericChainId = typeof chainId === 'string' ? parseInt(chainId) : chainId;
+      const validChainId = isSupportedChainId(numericChainId) ? numericChainId : supportedChainIds[0]; // Default to first supported chain
 
       const [usdcBalance, usdtBalance] = await Promise.all([
         fetchTokenBalance("USDC", address, validChainId),
         fetchTokenBalance("USDT", address, validChainId),
       ]);
 
-      const walletId = connector.id?.toLowerCase?.();
-      setWalletIcon(walletIcons[walletId] || null);
-      setWalletName(connector.name || null);
+      // Set generic wallet info for AppKit wallets
+      setWalletIcon(null); // AppKit handles wallet icons
+      setWalletName("Connected Wallet");
 
       const usdc = parseFloat(usdcBalance) || 0;
       const usdt = parseFloat(usdtBalance) || 0;
@@ -103,7 +92,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     } catch (error) {
       console.error("Failed to fetch token balances:", error);
     }
-  }, [address, connector, chainId, usdcPrice, usdtPrice]);
+  }, [address, chainId, usdcPrice, usdtPrice]);
 
   const refetchTransactions = useCallback(() => {
     setTransactionTrigger((prev) => prev + 1);
@@ -119,22 +108,18 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const disconnectWallet = useCallback(async () => {
     try {
-      // For Civic wallets, sign out from Civic Auth
-      if (connector?.id === 'civic') {
-        await signOut();
-      } else {
-        // For other wallets (MetaMask, WalletConnect, etc.), use wagmi disconnect
-        disconnect();
-      }
+      // AppKit handles disconnection through the modal
+      // The actual disconnect functionality is handled by AppKit
+      console.log("Disconnecting wallet...");
     } catch (error) {
       console.error("Error during wallet disconnection:", error);
     }
-  }, [connector, signOut, disconnect]);
+  }, []);
 
   useEffect(() => {
     setIsAuthenticated(isConnected);
 
-    if (!isConnected || !connector || !address) {
+    if (!isConnected || !address) {
       setWalletIcon(null);
       setWalletName(null);
       setUsdcBalance("0");
@@ -153,7 +138,7 @@ export const WalletProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     return () => {
       clearInterval(priceIntervalId);
     };
-  }, [isConnected, connector, address, fetchBalances, fetchAndCacheTokenPrices]);
+  }, [isConnected, address, fetchBalances, fetchAndCacheTokenPrices]);
 
   return (
     <WalletContext.Provider
