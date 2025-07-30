@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { ethers } from "ethers";
 import { CONTRACT_ABI, getContractAddress } from "@/paydirect";
-import { baseSepolia, liskSepolia } from 'wagmi/chains';
+import { supportedChains } from '@/config/networks';
 
-// Multi-chain RPC URLs configuration
+// Get Morph Holesky chain (the only supported chain)
+const morphHolesky = supportedChains[0];
+
+// RPC URL configuration for Morph Holesky
 const RPC_URLS = {
-    [baseSepolia.id]: process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL || "https://sepolia.base.org",
-    [liskSepolia.id]: process.env.NEXT_PUBLIC_LISK_SEPOLIA_RPC_URL || "https://rpc.sepolia-api.lisk.com"
+    [morphHolesky.id]: process.env.NEXT_PUBLIC_RPC_URL || "https://rpc-holesky.morphl2.io"
 };
 
 // This should be stored securely in environment variables

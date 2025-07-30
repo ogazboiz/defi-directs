@@ -1,9 +1,12 @@
-// src/config.js - Multi-chain contract configuration
+// src/config.js - Morph Holesky contract configuration
 import { getContractAddresses } from './config';
-import { liskSepolia } from 'wagmi/chains';
+import { supportedChains } from './config/networks';
 
-// Default to Lisk Sepolia contract address (primary network)
-export const CONTRACT_ADDRESS = getContractAddresses(liskSepolia.id).fiatBridge;
+// Get Morph Holesky chain (the only supported chain)
+const morphHolesky = supportedChains[0];
+
+// Default to Morph Holesky contract address (only supported network)
+export const CONTRACT_ADDRESS = getContractAddresses(morphHolesky.id).fiatBridge;
 
 // Helper function to get contract address for specific chain
 export function getContractAddress(chainId: number): `0x${string}` {

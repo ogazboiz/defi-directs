@@ -1,16 +1,24 @@
 // Centralized network configuration for consistent network support across the app
-import { mainnet, sepolia, polygon, baseSepolia, base, liskSepolia } from 'wagmi/chains';
 import type { Chain } from 'wagmi/chains';
 import type { AppKitNetwork } from '@reown/appkit/networks';
 
-// Define the networks your dApp will support consistently
+// Define Morph Holesky network
+const morphHolesky: Chain = {
+    id: 2810,
+    name: 'Morph Holesky',
+    nativeCurrency: { name: 'Ether', symbol: 'ETH', decimals: 18 },
+    rpcUrls: {
+        default: { http: ['https://rpc-holesky.morphl2.io'] }
+    },
+    blockExplorers: {
+        default: { name: 'Morph Holesky Explorer', url: 'https://explorer-holesky.morphl2.io' }
+    },
+    testnet: true
+};
+
+// Define the networks your dApp will support consistently - only Morph Holesky
 export const supportedChains: Chain[] = [
-    liskSepolia,
-    mainnet,
-    sepolia,
-    polygon,
-    baseSepolia,
-    base
+    morphHolesky
 ];
 
 // Export chain IDs for easy reference
@@ -43,12 +51,7 @@ export function chainToAppKitNetwork(chain: Chain): AppKitNetwork {
 // Export AppKit networks derived from our supported chains
 export const appKitNetworks: AppKitNetwork[] = supportedChains.map(chainToAppKitNetwork);
 
-// Chain icon mapping with placeholder images
+// Chain icon mapping for Morph Holesky
 export const chainIcons: Record<number, string> = {
-    [mainnet.id]: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-    [sepolia.id]: 'https://cryptologos.cc/logos/ethereum-eth-logo.png',
-    [polygon.id]: 'https://cryptologos.cc/logos/polygon-matic-logo.png',
-    [base.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
-    [baseSepolia.id]: 'https://cryptologos.cc/logos/coinbase-logo.png',
-    [liskSepolia.id]: 'https://cryptologos.cc/logos/lisk-lsk-logo.png',
+    [morphHolesky.id]: 'https://cryptologos.cc/logos/morph-logo.png', // You can update this with actual Morph logo
 };
