@@ -8,7 +8,6 @@ export function ConnectButton() {
     const { isConnected } = useAppKitAccount();
     const { open } = useAppKit();
 
-    // If any wallet is connected, don't show this button
     if (isConnected) {
         return null;
     }
@@ -51,8 +50,6 @@ export function CustomConnectButton() {
     );
 }
 
-// Alternative: AppKit Built-in Button
-// You can also use AppKit's built-in button component:
 export function AppKitConnectButton() {
     return (
         <div className="appkit-button-wrapper">
